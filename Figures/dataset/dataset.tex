@@ -1,0 +1,31 @@
+\begin{figure}[!ht]
+	\centering
+	\subfigure[Impact of dataset distribution]{
+		\begin{minipage}[t]{0.22\textwidth}{
+			\prefig
+			\begin{center}
+			\includegraphics[width=\textwidth, ]{Figures/dataset/skew_out_are-cropped.pdf}
+			\end{center}}
+			\postfig 
+			\adjustfigs
+			\prefigcaption
+			\label{skew_are}
+			\postfigcaption
+		\end{minipage}
+	}
+	\subfigure[Impact of arrival order]{
+		\begin{minipage}[t]{0.22\textwidth}{
+		    \prefig
+			\begin{center}
+			\includegraphics[width=\textwidth, ]{Figures/dataset/order_out_are-cropped.pdf}
+			\end{center}}
+			\postfig
+			\adjustfigs
+			\prefigcaption
+			\label{order_are}
+			\postfigcaption
+		\end{minipage}}
+	\vvv \vvv
+    \caption{Accuracy vs. skewness and item arrival order. Given a dataset, ``SHF'' refers to that the Second Half of items go First.}
+	\label{dataset}
+\end{figure}

@@ -1,0 +1,22 @@
+{\color{reviewA}
+\presub
+\subsection{Evaluation on Distributions and Arrival Orders} \postsub
+\label{eva_data}
+
+\input{Figures/dataset/dataset.tex}
+
+In this subsection, we show how the dataset distribution and the arrival order of items affect the accuracy of PRI.
+
+\noindent\textbf{Parameter Setting:}
+We use synthetic datasets whose skewness varies from 0.3 to 3.0 to show the impact of dataset distribution to InterestSketch. We use the dataset whose skewness is 1.5 and three different orders to show the impact of the arrival order of items. Three different orders are the original order, the reversed order, and the Second Half First (SHF).
+%
+In this experiment, we plot the change of ARE of InterestSketch to show the impact.
+The size of memory used ranges from 40KB to 140KB. We choose this range because using small memory can clearly expose the impact.
+
+\noindent\textbf{Impact of dataset distribution (Figure~\ref{skew_are}):}
+Our results show that the ARE of \sketchname{} is often lower than 0.01, and changes a little bit, especially when skewness is larger than 0.6.
+
+\noindent\textbf{Impact of arrival orders (Figure~\ref{order_are}):}
+Our results show that arrival orders indeed make some effects on the ARE of our \sketchname, but the effect is also not significant.
+Because PRI replaces the minimum counter with a probability, the fluctuation of ARE in a certain range is reasonable.
+}

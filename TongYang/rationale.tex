@@ -1,0 +1,7 @@
+\presec
+\section{Rationale} \postsec
+\label{sec:rationale}
+
+The key idea of the safe replacement is as follows. When inserting a new item, we replace the currently smallest item with a probability. If probability calculation is successful, the incoming item $e$ is stored in the preparatory bucket. Only when the same item $e$ comes again could it replace the original item and the smallest interest (\eg, frequency) is incremented by one. Otherwise, we do not change the smallest item. 
+
+An analogy of our algorithm could be drawn in internship selection and promotion in corporations. After interview, the interviewees with successful probability calculation could enter the internship stage. After being selected as an intern with a  probability, the intern has to come at least once again to become a regular worker. The person to be replaced is downgraded to intern. In this way, the lucky people who are selected as interns but never come to work could not become a regular worker. In addition, the regular worker with the minimum attendance rate is highly possible to be replaced. 

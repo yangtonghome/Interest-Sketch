@@ -1,0 +1,129 @@
+
+
+\begin{comment}
+\section{Pseudo Code}
+\label{sec:appendix}
+
+\begin{algorithm}
+	%	\SetLine
+	\KwIn{An item $e_i$}
+    $random()\in [0,1]$\\
+	\eIf{$e_{i}\in min\_heap$}
+	{
+		frequency$(e_{i}) ++$\;
+		$min\_heap.adjust()$\;
+	}
+	  {
+        \eIf{$min\_heap$ has empty buckets}
+	        {
+	        $min\_heap.insert(e_{i})$\;	
+	        $min\_heap.adjust()$\;
+	        }
+	   {
+	       \eIf{$random() \leqslant \frac{1}{2*f_{min}-
+t_{fail}+1}$}
+              {
+	           $v_{min} \gets e_i$\;
+	           $f_{min} \gets f_{min} + \frac{t_{fail}}{f_{min}}$\;
+	           $t_{fail} \gets 0$\;
+	           $min\_heap.adjust()$\;	
+	          }
+	          {
+	          $t_{fail}++$\;
+	          }
+	   }
+	  }
+	\caption{Insertion process for finding frequent items.}
+	\label{alg:fre}
+\end{algorithm}
+
+\begin{algorithm}
+	%	\SetLine
+	\KwIn{A packet $e_i$ with ($s_i,d_i$)}
+	$random()\in [0,1]$\\
+	\eIf{$e_{i} \in$ Bloom\_filter}
+	{
+	    $return$\;
+	}
+	{
+	$Bloom\_filter.insert(e_i)$\;
+	\eIf{$s_{i} \in min\_heap$}
+	{
+		$Interest(s_{i})++$\;
+		$min\_heap.adjust()$\;
+	}
+	{
+        \eIf{$min\_heap$ has empty buckets}
+	        {
+	        $min\_heap.insert(s_{i})$\;	
+	        $min\_heap.adjust()$\;
+	        }
+	   {
+	       \eIf{$random() \leqslant \frac{1}{2*\iii_{min}-
+t_{fail}+1}$}
+              {
+	           $v_{min} \gets s_i$\;
+	           $\iii_{min} \gets \iii_{min} + \frac{t_{fail}}{\iii_{min}}$\;
+	           $t_{fail} \gets 0$\;
+	           $min\_heap.adjust()$\;
+	          }
+	          {
+	          $t_{fail}++$\;
+	          }
+	   }
+	  }
+	}
+	\caption{Insertion process for finding super-spreaders.}
+	\label{alg:sup}
+\end{algorithm}
+
+\begin{algorithm}
+	%	\SetLine
+	\KwIn{An item $e_i$}
+	$random()\in [0,1]$\\
+	\eIf{$e_{i} \in$ Bloom\_filter}
+	{
+	    $return$\;
+	}
+	{
+	$Bloom\_filter.insert(e_i)$\;
+	\eIf{$e_{i} \in min\_heap$}
+	{
+		$Interest(e_{i})++$\;
+		$min\_heap.adjust()$\;
+	}
+	  {
+        \eIf{$min\_heap$ has empty buckets}
+	        {
+	        $min\_heap.insert(e_{i})$\;	
+	        $min\_heap.adjust()$\;
+	        }
+	   {
+	       \eIf{$random() \leqslant \frac{1}{2*\iii_{min}-
+t_{fail}+1}$}
+              {
+	           $v_{min} \gets e_i$\;
+	           $\iii_{min} \gets \iii_{min} + \frac{t_{fail}}{\iii_{min}}$\;
+	           $t_{fail} \gets 0$\;
+	           $min\_heap.adjust()$\;
+	          }
+	          {
+	          $t_{fail}++$\;
+	          }
+	   }
+	  }
+	}
+	\caption{Insertion process for finding persistent items.}
+	\label{alg:per}
+\end{algorithm}
+\end{comment}
+
+\input{Figures/cha/cha_cr/cha_cr.tex}
+
+\input{Figures/sup/sup_aae/sup_aae.tex}
+
+\input{Figures/sup/sup_cr/sup_cr.tex}
+			
+\input{Figures/per/per_aae/per_aae.tex}
+
+\input{Figures/per/per_cr/per_cr.tex}

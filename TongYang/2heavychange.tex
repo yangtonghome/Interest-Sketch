@@ -1,0 +1,40 @@
+\presub
+\subsection{Finding Heavy Changes}
+\postsub
+
+\ppp{Rationale:} 
+Both heavy changes and frequent items are related to the frequencies of items.
+%
+One typical approach for finding heavy changes is to build two data structures for frequent items in two periods respectively.
+%
+Our algorithm also uses this approach.
+%
+%The accuracy of this method highly depends on the accuracy of heavy hitters.
+
+
+\ppp{Data Structure:}
+For each period, we only build a min-heap, and do not use the filter. This min-heap is used to record frequent items.
+
+{
+\color{reviewD}
+\ppp{Insertion:} For each period,
+the insertion process of the min-heap is exactly the same as that of our framework (see Section \ref{sub:findinterest}).
+}
+
+
+\ppp{Report:} For two adjacent periods, we traverse all items: for each item, we query its frequency in the two min-heaps, and get two frequencies. If the difference of the two frequencies is larger than a predefined threshold, the item is reported as a heavy change. Note that if an item only appears in one min-heap, the queried frequency of the other min-heap is 0.
+
+\ppp{Analysis:}
+All algorithms for finding frequent items can be used for finding heavy changes.
+%
+There are three metrics for finding frequent items: precision, recall, and the accuracy of the estimate of the reported items.
+Only if all three metrics are high, the error of heavy changes is small. Fortunately, InterestSketch is accurate in terms of all three metrics, and thus can achieve very high accuracy for finding heavy changes.
+%
+%However, some algorithms for frequent items only focus on the precision or recall, but the accuracy for frequency 
+
+
+
+
+
+
+

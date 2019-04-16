@@ -1,0 +1,19 @@
+%\presec
+\uuu \vspace{0.01in}
+\section{Conclusion} %\postsec
+\label{sec:conclusion}
+
+
+This paper addresses the issue of finding interesting items in data streams. Interesting items can be frequent items, heavy changes, super-spreaders, or persistent items.
+%
+While most existing algorithms focus on one specific definition of interest and uses different data structures, we propose a generic framework which can find interesting items for different definitions of interest.
+%
+Our main technique is called PRI, which is able to differentiate interesting items from others with high probability, in limited memory space. 
+	The idea of PRI is \textit{to replace the current smallest item with a probability and then increment}.
+	%
+	We theoretically prove that when replacement is successful, with high probability, the new item has a higher interest than the current smallest interest. 
+	We use our framework to find frequent items, heavy changes, super-spreaders, and persistent items.
+	We conduct extensive experiments on three real datasets and one synthetic dataset.
+	Our experimental results show that compared with the state-of-the-art, for each definition of interest, our algorithm improves the insertion speed $2.2\sim 7.7$ times and the accuracy $74\sim 3207$ times.
+	%
+%All related codes are open-sourced and available at Github anonymously \cite{opensource}.

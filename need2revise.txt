@@ -1,0 +1,55 @@
+2018.10.24
+1. Unbiased -- unbaiase
+2. type --> kind
+3. figure 3 is too large.
+4. bloom --> Bloom
+
+==========
+2018.10.17
+1. first type, kind
+2. appearances,  occurreance..
+3. Why it could be discussed? As if the interest of an item refers to its frequency ?  虽然后文也有提到，但太远了
+
+
+=======
+2018.10.10
+1. reduce XX by to 4 times.
+√ 2. keep unchanged --> remain unchanged
+3. at that point, at this stage, at this time.
+√ 4. estimate 与 estimation ??? 估计、估计值？
+=======
+
+======
+14+4的设置：
+
+
+
+======
+附录四页包含：
+√ 1、参考文献
+√ 2、除了framework之外的伪代码
+√ 3、实验部分自己算法的参数调整及版本对比试验及图
+√ 4、discussion
+√ 5、更多实验结果放附录。
+√ 6、统一de-duplicates
+√ 7、a higher accuracy
+
+===
+
+√ 统一定义hot和cold,, 检查有没有heavy、light
+
+=====
+√ a higher accuracy and speed
+√ detect (HH) —> find
+√ always
+√ data set--> dataset
+√ hashed bucket
+√ $f_{min}$ to $f_{min}+t_{fail}/f_{min}$. 
+两种report还是一种report？
+
+√ desirable///desired
+desired语气更强，desirable更像是希望，desired有些像要求，已改成desired
+
+------------
+√ 1)increment应该没有动词语义
+√ 2)Figure2还没改

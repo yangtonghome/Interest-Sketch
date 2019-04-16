@@ -1,0 +1,397 @@
+\presec
+\section{Proofs} \postsec
+\label{sec:proof}
+
+In this section, we first derive the error bounds of the basic version of InterestSketch, then derive some theoretical properties of our technique - PRI, {\color{reviewC}finally we will compare two significant factors (memory cost and $I_{min}$) to the Space Saving and show the advantage of PRI.}
+
+
+\presub
+\subsection{Error Bounds of InterestSketch}
+\postsub
+
+For the basic version of InterestSketch, we first prove that $t_{fail}$, the number of replacement failures defined in Section \ref{sub:findinterest}, is bounded.
+
+\begin{theorem}
+	\label{theo:zero}
+	$0 \leqslant t_{fail} \leqslant 2\cdot\iii_{min}$.
+\end{theorem}
+
+\begin{proof}
+When there are still empty buckets in the min-heap, we do not use PRI. At that time, $t_{fail} = 0, \iii_{min} = 0$.
+
+When there is no empty bucket in the min-heap, $t_{fail}$ increases by 1 for each unsuccessful replacement. When $t_{fail}$ reaches $2\cdot\iii_{min}$, the probability $\mathcal{P} = \frac{1}{(2\cdot\iii_{min}-t_{fail}+1)}$ increases to 1, and then the coldest item $e_{min}$ is replaced, and $t_{fail}$ is set to 0.
+%which will make $e_{min}$ be replaced and set $t_{fail}$ to 0. 
+Therefore,
+$0 \leqslant t_{fail} \leqslant 2\cdot\iii_{min}$.
+
+\end{proof}
+
+Now we derive the deterministic upper bounds for the estimation error of InterestSketch.
+
+\begin{theorem}
+	\label{theo:first}
+	Let $\iii_x$ be the true interest of $x$, let $\hat{\iii_x}$ be the estimated interest of $\iii_x$, and let $\iii_{min}$ be the minimum counter in the min-heap. We have
+	\begin{equation}
+	\begin{aligned}
+    \centering
+    \hat{\iii_x} \leqslant \iii_x + \iii_{min} + 1
+	\end{aligned}
+	\end{equation}
+\end{theorem}
+
+\begin{proof}
+Let $\iii_x^\prime$ be the interest of $x$ after processing by the Bloom filter. Because of the false positives of the Bloom filter, some items which are supposed to be inserted to the min-heap will be discarded, which makes $\iii_x^\prime \leqslant \iii_x$.
+
+We assume that $x$ was inserted to the min-heap at time $t$. 
+Let $\iii_{min}^t$ be the minimum counter in the min-heap before time $t$, $t_{fail}^t$ the number of replacement failures before time $t$, and $\hat{\iii_x}^t$ the estimated interest of $x$ at time $t$. If there are still empty buckets in the min-heap before time $t$, $\hat{\iii_x}^t = 1, \iii_{min}^t = 0$. 
+Otherwise, $\hat{\iii_x}^t = \iii_{min}^t + \frac{t_{fail}^t}{\iii_{min}^t}$.
+According to Theorem~\ref{theo:zero}, $t_{fail}^t \leqslant 2\cdot\iii_{min}^t$. 
+Therefore, at that point, $\hat{\iii_x}^t \leqslant \iii_{min}^t + 2$.
+
+Since the value of the minimum counter monotonically increases over time, which means that $\iii_{min}^t \leqslant \iii_{min}$. Assume $x$ arrived $n$ times after $t$. 
+$n$ must be no larger than $\iii_x^\prime - 1$.
+Therefore,
+\begin{equation}
+\begin{aligned}
+\centering  
+\hat{\iii_x} &= \hat{\iii_x}^t + n\\
+&\leqslant \iii_{min}^t + 2 + \iii_x^\prime - 1\\ 
+&= \iii_{min}^t + \iii_x^\prime + 1 \\
+&\leqslant \iii_x + \iii_{min} + 1
+\end{aligned}
+\end{equation}
+\end{proof}
+
+\presub
+\subsection{Theoretical Properties of PRI}
+\postsub
+Below, we provide some theoretical properties of PRI during replacements. 
+
+\begin{theorem}
+	\label{theo:second}
+	Assume that there is no empty bucket in the min-heap. At this time, we begin to use PRI. We also assume that the minimum counter does not increase during the replacement and $t_{fail} = 0$. Let $\iii_{min}$ be the the minimum counter in the min-heap, let $C_i$ be the collections of the next $2\cdot\iii_{min} + 1$ repeatable items which are not in the min-heap and not discarded, and let $P_i$ be the probability that $e_{min}$ will be replaced by the $i_{th}$ item in $C_i$. Then, 
+	\begin{equation}
+    \begin{aligned}
+    %\centering  
+    P_i = \frac{1}{2\cdot\iii_{min}+1} \ \left(1 \leqslant i \leqslant 2\cdot\iii_{min}+1\right)
+    \end{aligned}
+    \end{equation}
+    %This is regardless of the stream permutation.
+
+This holds irrespective of the stream permutation.
+The probability of replacing $e_{min}$ with each distinct item in $C_i$ is proportional to the frequency of each distinct item in $C_i$.
+\end{theorem}
+
+\begin{proof}
+When $e_{min}$ is replaced by the $i_{th}$ item in $C_i$, $t_{fail} = i - 1$, which means that the first $i-1$ items in $C_i$ all fail to replace $e_{min}$.
+Therefore, 
+\begin{equation}
+\begin{aligned}
+\centering  
+P_i &= \frac{1}{2\cdot\iii_{min}-\left(i-1\right)+1} \times \prod_{j=0}^{i-2} \frac{2\cdot\iii_{min}-j}{2\cdot\iii_{min}-j+1}\\
+&= \frac{1}{2\cdot\iii_{min}-i+2} \times \frac{2\cdot\iii_{min}-i+2}{2\cdot\iii_{min}-i+3} \times
+\cdots \times \frac{2\cdot\iii_{min}}{2\cdot\iii_{min}+1}\\
+&= \frac{1}{2\cdot\iii_{min}+1} \ \left(1 \leqslant i \leqslant 2\cdot\iii_{min}+1\right)
+\end{aligned}
+\end{equation}
+
+Because the probability of replacement is all the same, if there are $k$ items in $C_i$, the probability of replacement is $k\cdot \frac{1}{2\cdot I_{min}+1}$, which is proportional to its frequency.
+\end{proof}
+
+\begin{theorem}
+	Fixing $I_{min}$ for the min-heap, on average after $I_{min}$ attempts, $e_{min}$ will be replaced by the new item.
+\end{theorem}
+
+\begin{proof}
+   If a new item $e_i$ appears in the min-heap, nothing happens to the $t_{fail}$, but if the item $e_i$ does not appears in the min-heap, it may replace $e_{min}$, after up to $2\cdot I_{min}+1$ trials, $e_{min}$ must be replaced. According to Theorem~\ref{theo:second}, the probability of $e_min$ being replaced by the $i$th element is identical and equal to $\frac{1}{2\cdot I_{min}+1}$.
+   Therefore, the average of $t_{fail}$:
+\begin{equation}
+\begin{aligned}
+\centering  
+\mathbb{E}\left(t_{fail}\right) &= \Sigma_{i=0}^{2I_{min}}{\frac{i}{2\cdot I_{min}+1}} \\
+&= \frac{1}{2\cdot I_{min}+1} \cdot \Sigma_{i=0}^{2I_{min}}i \\
+&= \frac{1}{2\cdot I_{min}+1} \cdot \frac{1}{2} \cdot \left({2I_{min}}\right) \cdot \left({2I_{min}+1}\right)\\
+&= I_{min}
+\end{aligned}
+\end{equation}   
+\end{proof}
+
+\presub
+\subsection{Advantages of PRI}
+\postsub
+
+In this subsection, we will focus on i.i.d(independent identical distribution) streams and we will compare memory cost and $I_{min}$ with the SS(Space Saving) algorithm.
+To clearly show the math properties of PRI and SS, we choose Zipf stream with skew $\alpha$ to illustrate. Zipf stream with a finite Domain $U = \{1, 2, ..., D\}$ has the following properties:\\
+
+$f_i$ is the arrival probability of elements of rank i out of population of D elements.
+\begin{equation}
+\begin{aligned}
+\centering  
+f_1 &> f_2 > f_3 > ... > f_D \\ 
+f_i &= \frac{i^{-\alpha}}{\Sigma_{n=1}^D{n^{-\alpha}}}
+\end{aligned}
+\end{equation}
+And we define:
+\begin{equation}
+\begin{aligned}
+\centering  
+F_i &= \Sigma_{n=1}^i{f_n}\\
+\Sigma_\alpha^D &= \Sigma_{n=1}^D{n^{-\alpha}}
+\end{aligned}
+\end{equation}
+
+We start with the analysis of finding top-k frequent items problem, and other problems are the variants of top-k. 
+Formally, we define the algorithm can successfully identify the top-k elements when $lim_{t\to\infty} P_{m, k}(t) = 1$(m is the number of entry in min-heap, k is the number of the most frequent elements we need, and t means after processing t items). 
+We call the largest $k$ counters in the min-heap head counters and the other $m-k$ counters tail counters.
+
+%In the SS algorithm, every time when an item $e_i$ appears, it first checks whether the item is in the min-heap. If so, the counter of $e_i$ will increase by 1, otherwise, the $e_{min}$ will be replaced by the $e_i$ and inherit the previous counter number and then increase by 1. 
+In order to make $lim_{t\to\infty} P_{m, k}(t) = 1$, we must guarantee that the increment rate of tail counters must below all the increment of head counters. Because the increment rate of the counter of the $k_{th}$ item is the slowest among all head counters. We only need to guarantee the increment rate of tail counters is below the the increment rate of the counter of the $k_{th}$ item.
+We compare to the Space Saving algorithm and find that it can solve top-k with less memory compared to previous algorithm. 
+
+% \begin{comment}
+\begin{theorem}
+	To solve the top-k problem with i.i.d Zipf stream and skew $\alpha$ < 1, for any fixed $k$, Space Saving requires $O(D^{1-\alpha})$ counteres.
+\end{theorem}
+
+\begin{proof}
+   Firstly, we focus on the increment rate of tail counters, any items that are not top-k will increase the tail counters by 1, therefore the increment rate of tail counters is equal to $\frac{\Sigma_{n=k+1}^D{f_i}}{m-k}$ (because the m-k counters will divide the speed of increment). Secondly, the increment rate of counter with $k_{th}$ element is $f_k$(because to solve top-k, Space Saving must guarantee the $k_{th}$ element resides in the min-heap).
+   Space Saving must guarantee:
+\begin{equation}
+\begin{aligned}
+\centering
+    \label{equ:1}
+    f_k  &> \frac{\Sigma_{n=k+1}^D{f_i}}{m-k} = \frac{1-F_k}{m-k}\\
+    \Rightarrow m &> k + \frac{1-F_k}{f_k} = k + \frac{1-\frac{\Sigma_\alpha^k}{\Sigma_\alpha^D}}{\frac{k^{-\alpha}}{\Sigma_\alpha^D}}\\
+    \Rightarrow m &> k + k^\alpha \left(\Sigma_\alpha^D-\Sigma_\alpha^k\right)
+\end{aligned}
+\end{equation}
+
+The data of the Zipf distribution has the following mathematical properties:\\
+\begin{equation}
+\begin{aligned}
+\centering
+    \label{equ:2}
+    \Sigma_\alpha^D &= \frac{D^{1-\alpha}}{1-\alpha} + O\left(1\right)\quad\alpha \in \left(0, 1\right)
+%    \Sigma_1^D &= log\left(1.78D\right) + o\left(1\right)\\
+%    \Sigma_2^{+\infty} &\approx 1.645
+\end{aligned}
+\end{equation}
+Therefore, from equation (\ref{equ:1}),(\ref{equ:2}), we can derive that the complexity of m is $O(D^{1-\alpha})$.
+
+\begin{equation}
+\begin{aligned}
+\centering
+\label{equ:3}
+k + k^\alpha \left(\Sigma_\alpha^D-\Sigma_\alpha^k\right) &= k + k^\alpha\cdot \frac{D^{1-\alpha}-k^{1-\alpha}}{1-\alpha} \\
+&= O\left(D^{1-\alpha}\right)
+\end{aligned}
+\end{equation}
+
+\end{proof}
+% \end{comment}
+
+\begin{theorem}
+	To solve the top-k problem with i.i.d Zipf stream and skew $\alpha$ = 1, for any fixed $k$, Space Saving requires $O(logD)$ counteres.
+\end{theorem}
+
+\begin{proof}
+\begin{equation}
+\begin{aligned}
+\centering  
+    m &> k + k^\alpha \left(\Sigma_\alpha^D-\Sigma_\alpha^k\right)\\
+    \Rightarrow m &> k + k\left(\Sigma_1^D-\Sigma_1^k\right)
+\end{aligned}
+\end{equation}
+
+The data of the Zipf distribution has the following mathematical properties:\\
+\begin{equation}
+\begin{aligned}
+\centering
+%    \Sigma_\alpha^D &= \frac{D^{1-\alpha}}{1-\alpha} + O\left(1\right)\quad\alpha \in \left(0, 1\right)
+    \Sigma_1^D &= log\left(1.78D\right) + o\left(1\right)
+%    \Sigma_2^{+\infty} &\approx 1.645
+\label{zipf:1}
+\end{aligned}
+\end{equation}
+
+Therefore, from equation (\ref{equ:2}),(\ref{equ:3}),(\ref{zipf:1}) we can derive that the complexity of m is $O(logD)$.
+
+\begin{equation}
+\begin{aligned}
+\centering
+\label{equ:4}
+k + k\left(\Sigma_1^D-\Sigma_1^k\right) &= k + k \cdot log\left(\frac{D}{k}\right)\\
+&= O\left(logD\right)
+\end{aligned}
+\end{equation}
+
+\end{proof}
+
+% \begin{comment}
+\begin{theorem}
+	To solve the top-k with i.i.d Zipf stream and skew $\alpha$ $\in(\frac{1}{3},1)$, PRI requires $O(D^\frac{1-\alpha}{1+\alpha})$ counters for any fixed $k$.
+\end{theorem}
+
+\begin{proof}
+As for PRI, there are two situations in the change of tail counters, every time when an item appears, if the rank of item is $\in[k+1,m]$, approximately one of tail counter increase by 1. But if the rank of item is $\in[m+1,D]$, the smallest counter will be replaced with probability $\Tilde{\mathcal{P}}$.
+Therefore, the increment rate of tail counters is:
+\begin{equation}
+\begin{aligned}
+\centering
+    \label{equ:5}
+    \frac{\Sigma_{i=k+1}^m{f_i}+\Tilde{\mathcal{P}}\cdot\Sigma_{i=m+1}^D{f_i}}{m-k}
+\end{aligned}
+\end{equation}   
+PRI must guarantee:
+\begin{equation}
+\begin{aligned}
+\centering  
+    f_k &> \frac{\Sigma_{i=k+1}^m{f_i}+\Tilde{\mathcal{P}}\cdot\Sigma_{i=m+1}^D{f_i}}{m-k}\\
+        &= \frac{\Sigma_\alpha^m-\Sigma_\alpha^k+\Tilde{\mathcal{P}}\cdot\left(\Sigma_\alpha^D-\Sigma_\alpha^m\right)}{m-k}\\
+    \Rightarrow m &> k + k^\alpha\left(\Sigma_\alpha^m-\Sigma_\alpha^k+\Tilde{\mathcal{P}}\cdot\left(\Sigma_\alpha^D-\Sigma_\alpha^m\right)\right)
+\end{aligned}
+\end{equation}
+
+we impose a stronger restriction for equation(\ref{equ:4}) 
+\begin{equation}
+\begin{aligned}
+\centering
+    \label{equ:6}
+    \Rightarrow m &> k + k^\alpha\left(\Sigma_\alpha^m-\Sigma_\alpha^k+\Tilde{\mathcal{P}}\cdot\Sigma_\alpha^D\right)
+\end{aligned}
+\end{equation} 
+
+For the sake of fluency, firstly we give the conclusion $\Tilde{\mathcal{P}} = O\left(D^{\frac{\alpha^2-\alpha}{1+\alpha}}\right)$(later we'll give the proof)
+\begin{equation}
+\begin{aligned}
+\centering  
+    m &> k + k^\alpha\cdot\frac{m^{1-\alpha}-k^{1-\alpha}+O\left(1\right)+D^\frac{1-\alpha}{1+\alpha}\cdot \left(D^{1-\alpha}+O\left(1\right)\right)}{1-\alpha}\\
+    &= \frac{k^\alpha\left(m^{1-\alpha}+D^\frac{1-\alpha}{1+\alpha}\right)-\alpha k+O\left(D^\frac{1-\alpha}{1+\alpha}\right)}{1-\alpha}\\
+    &= O\left(D^\frac{1-\alpha}{1+\alpha}\right)
+\end{aligned}
+\end{equation} 
+
+Now, we will prove $\Tilde{\mathcal{P}} = O\left(D^{\frac{\alpha^2-\alpha}{1+\alpha}}\right)$
+
+First we suppose $K$ is the total number of the items. We must guarantee the least frequent item will appear. Therefore,
+\begin{equation}
+\begin{aligned}
+\centering  
+    K\cdot\frac{D^{-\alpha}}{\Sigma_\alpha^D}&\geq1\\
+    \Rightarrow K&\geq\frac{\Sigma_\alpha^D}{D^{-\alpha}}  
+\end{aligned}
+\end{equation}
+
+Then, we consider $\Tilde{\mathcal{P}}$, which is relative to $I_{min}$ and the number of the $m$th frequent item. Also, we also need the conclusion of the $m$.
+\begin{equation}
+\begin{aligned}
+\centering  
+\mathcal{P}&=\frac{1}{(2\cdot\iii_{min}-t_{fail}+1)}\\
+&=O\left(\frac{1}{I_{min}}\right)\\
+&=O\left(\frac{m^{-\alpha}}{\Sigma_\alpha^D}\cdot K\right)^{-1}=O\left(\frac{m^{-\alpha}}{\Sigma_\alpha^D}\cdot \frac{\Sigma_\alpha^D}{D^{-\alpha}}\right)^{-1}\\
+&=O\left(\frac{D^{\frac{1-\alpha}{1+\alpha}}}{D}\right)^\alpha\\
+&=O\left(D^{\frac{-2\alpha^2}{1+\alpha}}\right)\leq O\left(D^{\frac{\alpha^2-\alpha}{1+\alpha}}\right)~for~any~ \alpha \in \left(\frac{1}{3},1\right)
+\end{aligned}
+\end{equation}
+\end{proof}
+% \end{comment}
+
+\begin{theorem}
+	To solve the top-k problem with i.i.d Zipf stream and skew $\alpha$ = 1, for any fixed $k$, PRI requires $O(\sqrt{logD})$ counters.
+\end{theorem}
+
+\begin{proof}
+From equation(\ref{equ:6}), we can get:
+\begin{equation}
+\begin{aligned}
+\centering 
+\label{equ:7}
+m &> k + k\left(\Sigma_1^m-\Sigma_1^k+\Tilde{\mathcal{P}}\cdot\Sigma_1^D\right)
+\end{aligned}
+\end{equation}
+
+For the sake of fluency, firstly we give the conclusion $\Tilde{\mathcal{P}}=O\left(\sqrt{\frac{1}{logD}}\right)$(later we will give the proof) and simplify the equation(\ref{equ:7}) based on equation(\ref{zipf:1}) to:
+\begin{equation}
+\begin{aligned}
+\centering  
+m &> k + k\left(log1.78\frac{m}{k} + \sqrt{\frac{1}{logD}}\cdot log1.78D\right)\\ 
+&= O\left(\sqrt{logD}\right)
+\end{aligned}
+\end{equation}
+
+Now, we will prove $\Tilde{\mathcal{P}}=O\left(\sqrt{\frac{1}{logD}}\right)$
+
+First we suppose $K$ is the total number of the items. We must guarantee the least frequent item will appear. Therefore,
+\begin{equation}
+\begin{aligned}
+\centering  
+    K\cdot\frac{D^{-1}}{\Sigma_1^D}&\geq1\\
+    \Rightarrow K&\geq\frac{\Sigma_1^D}{D^{-1}}  
+\end{aligned}
+\end{equation}
+
+Then, we consider $\Tilde{\mathcal{P}}$, which is relative to $I_{min}$ and the number of the $m$th frequent item. Also, we need the conclusion of the $m$.
+\begin{equation}
+\begin{aligned}
+\centering  
+\mathcal{P}&=\frac{1}{(2\cdot\iii_{min}-t_{fail}+1)}\\
+&=O\left(\frac{1}{I_{min}}\right)\\
+&=O\left(\frac{m^{-1}}{\Sigma_1^D}\cdot K\right)^{-1}=O\left(\frac{m^{-1}}{\Sigma_1^D}\cdot \frac{\Sigma_1^D}{D^{-1}}\right)^{-1}\\
+&=O\left(\frac{\sqrt{logD}}{D}\right)\leq O\left(\frac{1}{\sqrt{logD}}\right)
+\end{aligned}
+\end{equation}
+\end{proof}
+
+In terms of memory overhead, PRI has a clear advantage over Space Saving and then we focus on the size of $I_{min}$. After a series of mathematical derivations, we can see the obvious advantages of PRI.
+
+% \begin{comment}
+\begin{theorem}
+	To solve the top-k problem with i.i.d Zipf stream and skew $\alpha$ $\in(\frac{1}{3},1)$, $\frac{I_{min}-SS}{I_{min}-PRI}$=O($D^\frac{\alpha(1-\alpha)}{1+\alpha}$) for any fixed $k$.(using same number of counters.) 
+\end{theorem}
+\begin{proof}
+We allocate $D^{1-\alpha}$ counters so that both algorithms can solve the top-k problem. And the final $I_{min}$ is equal to the increment rate of tail counters times the number of items. So $\frac{I_{min}-SS}{I_{min}-PRI}$ is equal to the ratio of increment rate of tail counters.
+From equation(\ref{equ:1}),(\ref{equ:2}),(\ref{equ:5}) and we already get $\Tilde{\mathcal{P}}=O\left(D^{\frac{\alpha^2-\alpha}{1+\alpha}}\right)$:
+\begin{equation}
+\begin{aligned}
+\centering  
+\label{equ:8}
+\frac{I_{min}-SS}{I_{min}-PRI} &= \frac{1-F_k}{O\left(\Tilde{\mathcal{P}}\cdot\left(\Sigma_\alpha^D-\Sigma_\alpha^m\right)+\Sigma_\alpha^m-\Sigma_\alpha^k\right)}\\
+&=\frac{\Sigma_\alpha^D-\Sigma_\alpha^k}{O\left(D^{\frac{\alpha^2-\alpha}{1+\alpha}}\cdot\left(\Sigma_\alpha^D-\Sigma_\alpha^m\right)+\Sigma_\alpha^m-\Sigma_\alpha^k\right)}\\
+&=\frac{D^{1-\alpha}-k^{1-\alpha}}{O\left(D^{\frac{\alpha^2-\alpha}{1+\alpha}}\cdot\left(D^{1-\alpha}-m^{1-\alpha}\right)+m^{1-\alpha}-k^{1-\alpha}\right)}\\
+&= \frac{D^{1-\alpha}}{O\left(D^\frac{1-\alpha}{1+\alpha}+D^{\left(1-\alpha\right)^2}\right)}
+\end{aligned}
+\end{equation}
+
+For any $\alpha$ $in$ $(\frac{1}{3},1)$ $D^{\frac{1-\alpha}{1+\alpha}}$>$D^{(1-\alpha)^2}$, therefore $D^{(1-\alpha)^2}$ = O($D^{\frac{1-\alpha}{1+\alpha}}$)
+\begin{equation}
+\begin{aligned}
+\centering  
+\frac{D^{1-\alpha}}{O\left(D^\frac{1-\alpha}{1+\alpha}+D^{\left(1-\alpha\right)^2}\right)} &= \frac{D^{1-\alpha}}{O\left(D^{\frac{1-\alpha}{1+\alpha}}\right)}\\
+&= O\left(D^\frac{\alpha\left(1-\alpha\right)}{1+\alpha}\right)
+\end{aligned}
+\end{equation}
+\end{proof}
+% \end{comment}
+
+\begin{theorem}
+	To solve the top-k problem with i.i.d Zipf stream and skew $\alpha$ = 1, for any fixed $k$, $\frac{I_{min}-SS}{I_{min}-PRI}$=O($\sqrt{logD}$)(using same number of counters.) 
+\end{theorem}
+
+
+\begin{proof}
+We allocate $logD$ counters so that both algorithms can solve the top-k problem.
+From equation(\ref{equ:2}),(\ref{zipf:1}),(\ref{equ:8}) and we already get $\Tilde{\mathcal{P}}=O\left(\sqrt{\frac{1}{logD}}\right)$:
+\begin{equation}
+\begin{aligned}
+\centering  
+\frac{I_{min}-SS}{I_{min}-PRI} &=\frac{\Sigma_\alpha^D-\Sigma_\alpha^k}{O\left(\Tilde{\mathcal{P}}\cdot\left(\Sigma_\alpha^D-\Sigma_\alpha^m\right)+\Sigma_\alpha^m-\Sigma_\alpha^k\right)}\\
+&=\frac{logD-logk}{O\left(\sqrt{\frac{1}{logD}}\cdot\left(logD-logm\right)+logm-logk\right)}\\
+&=\frac{logD}{O\left(\sqrt{\frac{1}{logD}}\cdot logD + logm\right)}\\
+&=\frac{logD}{O\left(\sqrt{logD}+loglogD\right)}\\
+&=\frac{logD}{O\left(\sqrt{logD}\right)}\\
+&=O\left(\sqrt{logD}\right)
+\end{aligned}
+\end{equation}
+
+\end{proof}
+We have shown that PRI has a clear advantage over SS when comparing the two significant indicators(memory cost and $I_{min}$)

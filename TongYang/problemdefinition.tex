@@ -1,0 +1,64 @@
+%\presec
+%\section{Background and Related Work} \postsec
+%\label{sec:relatedwork}
+
+%There are the four typical problems related to finding interesting items: 1) finding frequent items; 2) finding heavy changes; 3) finding Super-Spreaders; and 4) finding persistent items. In this section, we first state the considered problems. Then, we introduce the typical algorithms for each of them respectively.
+
+\presec
+\section{Problem Statement} \vvv
+%This section show the definitions of typical tasks, and the related work briefly introduced in the Introduction is described in detail in Appendix \ref{sec:relatedwork}.
+
+{\color{reviewA}
+\ppp{Finding Interesting Items:}
+\hl{A data stream $\mathcal{S}$, either limited or unlimited, consists of items, where each item can appear more than once. We can use ``interest'' to describe one property of concern. Finding interesting items means to report all the items with interests larger than a given threshold.
+%
+Different definitions of interest correspond to different tasks of data streams. The size of each item can vary according to the definitions. Next, we show four typical tasks.
+}}
+
+{\color{reviewA}
+\ppp{Finding Frequent Items:}
+\hl{In finding frequent items, the interest is defined as \textbf{frequency}, i.e., the number of appearances of each item. Finding frequent items includes two problems: heavy hitter and top-k. The difference is that heavy hitter is to find items whose frequencies are larger than a given threshold, while top-$k$ is to find top-$k$ frequent items. Since the two problems are similar, we will focus on the problem of heavy hitter.}}
+
+\ppp{Finding Heavy Changes:}
+Given a data stream, we divide it into equal-sized periods. 
+In finding heavy changes, the interest is defined as \textbf{change of frequency}, \ie, the change of frequency of an item in two adjacent periods.
+%Given two adjacent periods, each item has a frequency. 
+The frequencies of some items could drastically change between two adjacent periods. \hl{Reporting and Analyzing such changes is important in security} \cite{flowradar,revsketch}. \hl{Finding heavy changes is to find items whose changes of frequency are larger than a given threshold.}
+
+
+\hl{\noindent\textbf{Finding Super-spreaders:}
+In computer networks, each item is a packet with a source IP address and a destination IP address. A specific source IP address can send packets to many destination IP addresses. Super-spreaders are those source IP addresses that have more destination IP addresses than a given threshold. When the interest is defined as \textbf{connections}, i.e., the number of destination IP addresses for a given source IP address, the problem will be finding super-spreaders. In other words, super-spreaders are the most influential individuals spreading information, because they have more connections than a given threshold. }
+
+
+\noindent\hl{\textbf{Finding Persistent Items:}
+Again, given a data stream, we equally divide it into equal size periods. For a specific item, its \textbf{persistency} indicates the number of periods in which the item appears. 
+No matter an item appears either once or more in a period, its persistency is incremented by one because there exists this item in this period. When we define interest as persistency, the problem will be to find persistent items. In other words, we want to find the items whose persistency is more than a given threshold.
+}
+
+
+
+\noindent\textcolor{reviewA}{\textbf{Other problems:} \hl{While we focus on the above four problems, there are also some other problems with different definitions of interest.
+1) Finding DDoS victims. This is similar to finding Super-Spreaders. In this problem, interest is defined as connections. This problem is to find those destination IP addresses that have more source IP addresses than a given threshold. 
+2) Finding Advance Persistent Threats (APT). This problem needs to find items that are persistent but not frequent.
+3) Finding both frequent and persistent items. In some application, one may need to find items that are both frequent and persistent items.} }
+
+
+
+
+
+
+
+\begin{comment}
+\ppp{Finding Super-spreaders:}
+In computer networks, each item is a packet with a source IP address and a destination IP address. A specific source IP address can send packets to many destination IP addresses. When the interest is defined as \textbf{connections}, i.e., the number of destination IP addresses for a given source IP address, the problem will be about finding super-spreaders.
+
+
+\ppp{Finding Persistent Items:}
+Again, given a data stream, we equally divide it into equal size periods. 
+%
+For a specific item, its \textbf{persistency} indicates the number of periods in which the item appears. 
+%
+In each period, if an item appears, either once or more, its persistency is incremented by one. 
+%
+When we define interest as persistency, the problem will be to find persistent items.
+\end{comment}

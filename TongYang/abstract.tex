@@ -1,0 +1,26 @@
+\begin{abstract}
+	In high-speed data streams, a small fraction of items that have specific characteristics are often the focus, such as frequent items, heavy changes,
+    %those source IP addresses with the most destination IP addresses (often known as Super-Spreaders), 
+    Super-Spreaders, or persistent items. We call them interesting items.
+	Most existing algorithms are designed for only one specific characteristic/interest, and use different data structures for different interests.
+%	No previous work has so far considered the four characteristics above together. 
+	%Another issue with existing algorithms is that, when memory space is limited, they can hardly guarantee both a high accuracy and a high speed at the same time. 
+%Existing algorithms can be divided into two kinds. The first kind records all information of the stream, and thus is not memory efficient.
+%The second kind manages to only record the interesting items, but it is challenging to differentiate interesting items from others.
+	This paper generalizes these characteristics into one aspect, which we call finding interesting items in data streams. 
+	%
+	To find interesting items, we propose a generic framework, InterestSketch. 
+	%
+InterestSketch manages to record only interesting items.
+To address the challenge of differentiating interesting items from others, we propose a key technique called Probabilistic Replacement and then Increment (PRI).
+	%PRI is designed to record only interesting items with high accuracy and high speed, using limited memory space. 
+	%The key idea of PRI is as follows. To insert a new item, we \textit{replace the current smallest item in the min-heap with a dynamic probability $\mathcal{P}$}. \textit{If the replacement is successful, the smallest interest (\eg, frequency) is incremented.}
+%
+	%Otherwise, we do not change the smallest item, but increase the probability $\mathcal{P}$.
+	%
+	Our theoretical proofs show that when replacement is successful, with high probability, the new item has a higher interest than the current smallest interest. 
+	We conduct extensive experiments on three real datasets and one synthetic dataset, on four definitions of interesting items.
+	Our experimental results show that compared with the state-of-the-art, for each definition of interest, our algorithm increases the insertion speed $2.2\sim 7.7$ times and decreases the error $74\sim 3207$ times.
+	%
+	All related code and datasets are open-source and available at Github anonymously \cite{opensource}.
+\end{abstract}

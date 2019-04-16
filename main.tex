@@ -1,0 +1,222 @@
+%\documentclass[conference]{InputFiles/IEEEtran}
+%\documentclass[10pt, journal]{InputFiles/IEEEtran}
+%\documentclass{InputFiles/vldb}
+
+\documentclass[sigconf, anonymous = true, screen = true, 10pt]{acmart}
+
+%\documentclass[sigconf,10pt]{acmart} 
+
+\settopmatter{printacmref=false} % Removes citation information below abstract
+\renewcommand\footnotetextcopyrightpermission[1]{} % removes footnote with conference information in first column
+\pagestyle{plain} % removes running headers
+%\documentclass{InputFiles/sig-alternate-05-2015}
+% % % % % % % % % % package starts...% % % % % % % % % % % % % % % % % % % % %
+    \usepackage{indentfirst}
+	\usepackage{graphicx} 
+	\usepackage{balance}
+	\usepackage{amssymb, amsmath}
+%	\usepackage[thmmarks, amsmath, thref, amsthm]{ntheorem}%
+%	\usepackage{amsfonts}
+%	\let\proof\relax
+%	\let\endproof\relax
+	\usepackage{amsthm}
+%	\renewcommand{\proofname}{\bf Proof}
+	
+	\usepackage{multirow, rotating, wasysym, url}
+	\usepackage[tight]{subfigure}
+	%\usepackage[retainorgcmds]{InputFiles/IEEEtrantools}
+	\usepackage[ruled,linesnumbered,vlined]{algorithm2e}
+	\usepackage{hyperref} %reference hyper links.
+	\usepackage{color}
+	\usepackage{soul}
+	\usepackage{bbm}
+%	\usepackage{caption2}
+	\usepackage[margin=0.05in]{caption}
+	\usepackage{enumerate}
+	\usepackage{framed}
+	\usepackage{lipsum}
+	\usepackage[normalem]{ulem}
+%	\captionsetup{size=footnotesize,
+		%justification=centering, %% not needed
+%		skip=5pt, position = bottom}
+% % % % % % % % % % package ends...% % % % % % % % % % % % % % % % % % % % % %
+\makeatletter
+ \let\@copyrightspace\relax
+\makeatother
+
+
+\graphicspath{{./DrawingFigures/},{./EvaluateFigures/}, {./GraphPPT/}} 
+
+% % % % % % % % % % New command starts...% % % % % % % % % % % % % % % % % % %
+	\newcommand{\presec}{\vspace{-0.06in}}
+	\newcommand{\postsec}{\vspace{-0.06in}}
+	
+	\newcommand{\presub}{\vspace{-0.06in}}
+	\newcommand{\postsub}{\vspace{-0.06in}}
+	\newcommand{\vvv}{\vspace{-0.03in}}
+	\newcommand{\uuu}{\vspace{0.02in}}
+	
+	\newcommand{\pretablecaption}{\vspace{-0.0in}}
+	\newcommand{\posttablecaption}{\vspace{-0.0in}}
+	
+	\newcommand{\prefig}{\vspace{-0.0in}}
+	\newcommand{\postfig}{\vspace{-0.0in}}
+	
+	\newcommand{\prefigcaption}{\vspace{-0.0in}}
+	\newcommand{\postfigcaption}{\vspace{-0.0in}}
+	
+	\newcommand{\adjustfigs}{\vspace{-0.0in}}
+	\graphicspath{{./EvaluateFigures/}, {./GraphPPT/}, {./DrawingFigures/}}
+	
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Only for Appendix
+	\newcommand{\presecapp}{\vspace{-0.00in}}
+	\newcommand{\postsecapp}{\vspace{-0.00in}}
+	    
+	\newcommand{\prefigapp}{\vspace{-0.0in}}
+	\newcommand{\postfigapp}{\vspace{-0.0in}}
+	
+	\newcommand{\presubapp}{\vspace{-0.00in}}
+	\newcommand{\postsubapp}{\vspace{-0.00in}}
+	
+	\newcommand{\prefigcaptionapp}{\vspace{-0.0in}}
+	\newcommand{\postfigcaptionapp}{\vspace{-0.0in}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\newcommand{\ie}{\textit{i.e.}}
+	\newcommand{\eg}{\textit{e.g.}}
+	\newcommand{\etal}{\textit{et al.}}
+	
+	
+	\newcommand{\subfigs}{\hspace{-0in}}
+	\newcommand{\subfigsvert}{\vspace{-0in}}
+	\newcommand{\preequation}{\vspace{-0in}}
+	\newcommand{\postequation}{\vspace{-0in}}
+	\newcommand{\pretheorem}{\vspace{-0in}}
+	\newcommand{\posttheorem}{\vspace{-0in}}
+	
+		\input{InputFiles/new-commands}
+		\newcommand{\Proc}{Proc. }
+		\newcommand{\Conf}{Conf. }
+		\newcommand{\Inte}{Int. }
+		\newcommand{\Symp}{Symp. }
+	\newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
+	
+	\newcommand{\para}{\vspace{0.03in}\noindent\textbf}
+	
+	\newcommand{\figwidthdraw}{0.45\textwidth}
+	\newcommand{\figwidtheva}{0.4\textwidth}
+	
+	\newcommand{\bm}[1]{\mbox{\boldmath{$#1$}}}
+	
+	\definecolor{lbq}{RGB}{0,166,0}
+	\definecolor{reder}{RGB}{255,0,0}
+
+	\definecolor{zyd}{RGB}{0,0,255}
+	\definecolor{lar}{RGB}{0,100,255}
+	\definecolor{xy}{RGB}{100,100,0}
+	\definecolor{gray}{rgb}{0.6,0.6,0.6}
+	\definecolor{shadecolor}{rgb}{0.92,0.92,0.92}
+	\definecolor{jj}{HTML}{01A2FF}
+% Define color used for revision
+    \definecolor{reviewA}{HTML}{0000FF}
+    \definecolor{reviewB}{HTML}{FF0000}
+    \definecolor{reviewC}{HTML}{FF00FF}
+	\definecolor{reviewD}{HTML}{00CC00}
+
+	
+	\newcommand{\ppp}{\noindent\textbf}
+	\newcommand{\lbq}{\textcolor{lbq}}
+	\newcommand{\zyd}{\textcolor{zyd}}
+	\newcommand{\lar}{\textcolor{lar}}
+	\newcommand{\xy}{\textcolor{xy}}
+	\newcommand{\yt}{\textcolor{lbq}}
+	
+	\newcommand{\aname}{InterestSketch}
+	%\newcommand{\ss}{Super-Spreader}
+	
+	\newcommand{\ii}{$\mathcal{I}$}
+	\newcommand{\iii}{\mathcal{I}}
+	
+	
+	
+	\clubpenalty=10000
+	\widowpenalty = 10000
+% % % % % % % % % % New command ends...% % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % Backup starts... % % % % % % % % % % % % % % % % % % % % %  
+	%\clubpenalty=10000
+	%\widowpenalty = 10000
+	%\usepackage{caption2} %fo setlength
+	%\setlength{\parskip}{0.1\baselineskip}
+	%\setlength{\abovecaptionskip}{-1pt}
+	%\vfill\eject % force going to next page
+% % % % % % % % % % Backup ends... % % % % % % % % % % % % % % % % % % % % % %
+%	
+
+% DOI
+%\acmDOI{10.475/123_4}
+
+% ISBN
+%\acmISBN{123-4567-24-567/08/06}
+
+%Conference
+\acmConference[SIGMOD'18]{}{June 10 - 15, 2018}{Houston, TX, USA} 
+%\acmYear{1997}
+%\copyrightyear{2016}
+
+%\acmPrice{15.00}
+
+\begin{document}
+
+\title{Finding Interesting Items in Data Streams}
+
+\author{
+	Paper ID: 637. 14+4 pages.
+	%	Yang Zhou, Peng Liu, Hao Jin, Tong Yang, Xiaoming Li \\
+	%	Department of Computer Science and Technology, Peking University, China
+	%	\IEEEauthorblockN{Yang Zhou, Peng Liu, Hao Jin, Tong Yang, Xiaoming Li}\\
+	%	\IEEEauthorblockA{Department of Computer Science and Technology, Peking University, China}\\
+}
+
+\sloppy
+
+	\input{TongYang/abstract.tex}
+	\maketitle
+	
+	\input{TongYang/Introduction.tex}
+	
+	\input{TongYang/problemdefinition.tex}
+	
+
+	\input{TongYang/basicAlgorithm.tex}
+    			\input{TongYang/1framework.tex}
+				\input{TongYang/2frequentalg.tex}
+                \input{TongYang/2heavychange.tex}
+				\input{TongYang/3superspreaderalg.tex}
+				\input{TongYang/4persistentalg.tex}
+	\input{TongYang/optimization.tex}
+	\input{TongYang/extention.tex}
+	%\input{TongYang/proof.tex}
+	\input{TongYang/newproof.tex}
+	\input{ZYD/experiments.tex}
+	\input{TongYang/conclusion.tex}
+
+    \clearpage	
+	\vfill\eject
+	{\scriptsize
+	\bibliographystyle{unsrt}
+	\bibliographystyle{abbrv}
+	\bibliography{InputFiles/reference}	
+%	\input{sc.bbl}
+	}
+
+    \clearpage		
+	{
+	\appendix
+	\input{TongYang/RelatedWork.tex}
+	\input{TongYang/Appendix.tex}
+	}
+	
+
+\end{document} 
+
+

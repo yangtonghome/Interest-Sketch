@@ -1,0 +1,13 @@
+
+%\vspace{-0.07in}
+{\color{reviewD}
+\presub
+\subsection{Evaluation on Latency} %\postsub
+\label{eva_latency}
+
+We use IP Trace Dataset to evaluate latency. Parameters setting is the same as that of each previous task.
+
+\noindent\textbf{Latency of four tasks (Figure~\ref{fre_ip_latency}-\ref{per_ip_latency}):}
+According to the results, the latency of our \sketchname{} is often smaller than other algorithms. For our \sketchname{}, the latency of finding Super-Spreaders is similar to that of finding frequent items and finding heavy changes. The latency of finding persistent items is higher because we need to periodically clear the Bloom filter.
+Besides, to achieve head-to-head comparison, we use more memory in finding persistent items than other tasks, because other algorithms on finding persistent items, like PIE, cannot work if memory size is less than 16MB.
+}

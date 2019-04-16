@@ -1,0 +1,7 @@
+\presub 
+\subsection{Limitations of Our Final Version} %\postsub
+\label{eva_def}
+
+The above experimental results show that the final version of \sketchname{} can achieve high accuracy with small memory. However, the final version cannot guarantee that it will report all the interest items correctly even with larger amount of memory. We can only claim that as the memory increases, the final version has a higher probability to be correct. In contrast, the basic version of \sketchname{} can record all the flows if it has enough memory. Though it may use more memory and be slower, its correctness can be guaranteed when the memory size is large enough.
+When compared with the Unbiased SpaceSaving \cite{unbiasedsketch}, another shortcoming of InterestSketch is that the InterestSketch is biased.
+However, InterestSketch achieves 1820$\sim$2576 smaller error rate than the Unbiased SpaceSaving (see Figure \ref{fre_are}).

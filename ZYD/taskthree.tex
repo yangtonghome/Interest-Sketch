@@ -1,0 +1,41 @@
+\presub %\vvv
+\subsection{Evaluation on Finding \taskthree} %\postsub
+\label{eva_three}
+
+\noindent\textbf{Parameter Setting:}
+%We compare three frameworks: \sketchname, \EHname and \Splittername. For each frameworks, we using CM Sketch, CM-CU Sketch and Count Sketch approaches.
+%
+%We compare 5 approaches: CM \sketchname, CM-CU \sketchname, Count \sketchname, \EHname {} and \Splittername.
+%
+We compare 3 algorithms: \sketchname, \perpie\cite{persisitem}, and \perss\cite{smallspace}.
+Let $z$ be the number of hash functions for the Bloom filter. For \sketchname{}, we set $z=3$.
+For \perpie{} and \perss, the parameters are set according to the recommendation of the authors.
+In the experiment, we compare AAE, ARE, PR, CR, and insertion speed among the 3 algorithms.
+The memory size ranges from 16MB to 19MB. We choose this range because \perpie{} cannot report any interesting items on the synthetic dataset if memory size is less than 16MB. Also, we set the memory size of \sketchname{} to $1/20$ of the memory size of the other algorithms when we compare AAE, ARE, PR, and CR. 
+We do this because when memory size is more than 16MB, the AAE and ARE of \sketchname{} are 0, and the CR and PR of \sketchname{} are 1. To compare these algorithms more conveniently, we reduce the memory size of \sketchname.
+			
+			
+\noindent\textbf{ARE (Figure~\ref{per_are_syn}-\ref{per_are_net}):}
+We find that, on three real-world datasets, the ARE of \sketchname{} is around 771 times and 50212 times lower than \perss{} and \perpie. On the synthetic dataset, the ARE of \sketchname{} is around 115 times and 1655 times lower than \perss{} and \perpie.  
+
+
+\noindent\textbf{PR (Figure~\ref{per_pr_syn}-\ref{per_pr_net}):}
+We find that, on three real-world datasets, the PR of \sketchname{} is around 1.01 times and 1.23 times higher than \perss{} and \perpie. On the synthetic dataset, the PR of \sketchname{} is around 1.08 times and 6 times higher than \perss{} and \perpie.  
+			
+			
+\noindent\textbf{Speed (Figure~\ref{per_speed_syn}-\ref{per_speed_net}):}
+We find that the insertion speed of \sketchname{} is around 1.4 times and 4 times faster than \perss{} and \perpie{} on three real-world datasets and one synthetic dataset.
+
+\noindent\textbf{AAE (Figure~\ref{per_aae_syn}-\ref{per_aae_net}) in Appendix \ref{app:fig}:}
+We find that, on three real-world datasets, the AAE of \sketchname{} is around 698 times and 53543 times lower than \perss{} and \perpie. On the synthetic dataset, the AAE of \sketchname{} is around 167 times and 6095 times lower than \perss{} and \perpie. 
+
+\noindent\textbf{CR (Figure~\ref{per_cr_syn}-\ref{per_cr_net}) in Appendix \ref{app:fig}:}
+We find that, on three real-world datasets, the CR of \sketchname{} is around 1.03 times and 33 times higher than \perss{} and \perpie. On the synthetic dataset, the CR of \sketchname{} is around 1.05 times and 33 times higher than \perss{} and \perpie.  
+
+\noindent\textbf{Summary:}
+%
+1) Although the memory size of \sketchname{} is only $1/20$ of the other algorithms, it still performs much better. The ARE of \sketchname{} is lower than 0.005 when its memory size is more than 800KB on three real-world datasets and one synthetic dataset.
+
+2) The PR and CR of \sketchname{} are often more than 0.99 when its memory size is more than 800KB on three real-world datasets and one synthetic dataset. The PR and CR of \perss{} are often more than 0.95 when its memory size is more than 16MB on three real-world datasets and one synthetic dataset. However, the CR of \perpie{} is often lower than 0.2 because it wastes much of the space to record the items in every period.
+
+3) \sketchname{} can achieve higher insertion speed compared to \perss{} and \perpie. Also, \sketchname{} will not be slower when its memory use increases. In contrast, \perss{} slows down as memory use increases.

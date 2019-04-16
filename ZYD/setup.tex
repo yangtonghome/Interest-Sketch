@@ -1,0 +1,89 @@
+\presub
+\subsection{Experimental Setup} \postsub
+\label{subsec:setup}
+%
+\noindent\textbf{Datasets:}
+
+\noindent\textbf{1) IP Trace Dataset:}
+The IP Trace Dataset are streams of anonymized IP traces collected in 2016 by CAIDA~\cite{caida}. Each item contains a source IP address ($4$ bytes) and a destination IP address ($4$ bytes){\color{reviewA} , 8 bytes in total.} {\color{reviewA} For this and the following three datasets, we assume that each item appears at most $2^{32}-1$ times.}
+
+\noindent\textbf{2) Web Page Dataset:}
+The Web page dataset is built from a collection of web pages, which were downloaded from the website~\cite{webdocs}.
+Each item ($4$ bytes) represents the number of distinct terms in a web page.
+
+\noindent\textbf{3) Synthetic Datasets:}
+We generate 10 synthetic datasets which follow the Zipf~\cite{zipf} distribution by using Web Polygraph~\cite{webpoly}, an open source performance testing tool. Each dataset has 32 million items and the skewness of datasets varies from 0.3 to 3.0. The length of each item ID is $4$ bytes. 
+In the following experiment, we use the dataset with skewness of 1.5 as synthetic dataset.
+
+\noindent\textbf{4) Network Dataset:}
+%This is a temporal network of interactions on the stack exchange web site \cite{net_dat}. Each item consists of three values $u,v,t$, which means user $u$ answered user $v'$s question at time t. We regard $u$ as an item ID and $t$ as its timestamp.
+The network dataset contains users' posting history on the stack exchange website~\cite{net_dat}. Each item has three values $u,v,t$, that mean user $u$ answered user $v$'s question at time $t$. We use $u$ as the ID and $t$ as the time stamp of an item.
+
+\noindent\textbf{Implementation:}
+We have implemented \sketchname {} in C++.
+The hash functions are implemented using the 32-bit Bob Hash (obtained from the open source website~\cite{bobhash}) with different initial seeds. The random function is implemented from the random library in C++. We produce the random number by using the random\_device from the <random> header file of the C++ standard library. All of the abbreviations used in the evaluation and their full name are shown in Table~\ref{abbr}.
+
+\noindent\textbf{Computation Platform:}
+We conducted all experiments on a machine with a 2-core processor (4 threads, 6th Gen Intel Core i7-6600U @2.60 GHz)
+and 16 GB DRAM memory.
+The processor has three levels of cache: one 128KB L1 cache, one 512KB L2 cache, and one 4MB L3 cache. 
+
+\noindent\textbf{Metrics:}
+\label{subsec:eva:metric}
+
+%We use the following metrics (including accuracy metrics and insertion speed) to evaluate the performance of our algorithms. In experiment, we discover that after reading enough items (usually $1\sim2$ window sizes), the experiment result  will become stable. We measure the metrics in different window (after the first window), and compute the average value. We use the average value to represent the experiment result at given parameter setting. The error bar represents the minimal value and the maximum value.%
+
+\noindent\textbf{1) Average Absolute Error (AAE):} $\frac{1}{|\mathbf{\Psi}|} \sum_{e_i \in \mathbf{\Psi}}|\iii_i-\widehat{\iii_i}| $,
+where $\iii_i$ is the real interest of item $e_i$, $\widehat{\iii_i}$ is its estimated interest, and $\mathbf{\Psi}$ is the query set. 
+Here, we query the dataset by querying every distinct item once in the sketch.
+
+\noindent\textbf{2) Average Relative Error (ARE):} $\frac{1}{|\mathbf{\Psi}|} \sum_{e_i \in \mathbf{\Psi}}|\iii_i-\widehat{\iii_i}|/ \iii_i $,
+where $\iii_i$ is the real interest of item $e_i$, $\widehat{\iii_i}$ is its estimated interest, and $\mathbf{\Psi}$ is the query set. 
+Here, we query the dataset by querying each correct instance once in the sketch.
+
+\noindent\textbf{3) Precision Rate (PR):}
+Ratio of the number of correctly reported items to the number of reported items.
+
+\noindent\textbf{4) Recall Rate (CR):}
+Ratio of the number of correctly reported items to the number of correct items.
+
+\noindent\textbf{5) Speed:}
+Million operations (insertions) per second (Mops).
+All the experiments about speed are repeated 10 times and the average speed is reported.
+
+{\color{reviewD}
+\noindent\textbf{6) Latency:}
+Average process time needed by each item.
+}
+
+% Steve: a reviewer might want to see the standard deviation as well...
+
+Let $d$ be the number of cells in each bucket. For our \sketchname{} in the following experiments, we set $d=8$.
+
+\begin{table}
+\vspace{-0.05in}
+\caption{Abbreviations in experiment}
+\vspace{-0.1in}
+\label{abbr}
+\begin{tabular}{|c|l|}
+\hline
+Abbreviation&Full name\\
+\hline
+CM&Count-Min Sketch\cite{cmsketch}\\
+\hline
+FR&Flow\cite{flowradar}\\
+\hline
+SS&SpaceSaving\cite{spacesaving}\\
+\hline
+CF&Cold Filter\cite{coldfilter}\\
+\hline
+OLF&One-level Filtering\cite{superspreader}\\  
+\hline
+TLF&Two-level Filtering\cite{superspreader}\\
+\hline
+SHF&Second Half First\\
+\hline
+IttSketch&The final version of \sketchname{} in \S \ref{sec:final}\\
+\hline
+\end{tabular}
+\end{table}

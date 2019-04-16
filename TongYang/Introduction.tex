@@ -1,0 +1,201 @@
+%\vvv\vvv
+\vvv\vvv
+\presec
+\section{Introduction} \postsec
+\label{sec:intro}
+\uuu
+\subsection{Motivation} \postsub
+
+%In the study of Big Data, data stream is often the representation form of data.
+%
+%Data stream contains consecutive items whose time of appearances might be zero, one or more. 
+%
+%However, under most circumstances, only a small section of data is cared in researches. 
+%
+%For instance, people are likely to cared about the items with the highest frequencies. 
+%
+%There is another likelihood that the most persistent items are the ones to study. For another example, in security, people want to find the items who are Super-Spreaders. 
+
+
+Big data often comes in the form of high-speed data streams.
+%
+%A data stream is composed of a series of items, and each item could appear more than once.
+%
+A data stream is made of continuously arriving items, each of which appearing one or multiple times.
+%
+Although there are typically many items, people are often interested in a very limited number of them with some special characteristics, such as frequent items \cite{frequent,frequent2,frequentstream,countsketch}, heavy changes\cite{kary,revsketch, flowradar},  Super-Spreaders \cite{superspreader}, or persistent items \cite{persistentsketch,persisitem}.
+In this paper, we call them \textit{interesting items}.
+
+Finding interesting items is not new. For instance, the problem of finding frequent items is an old but still active topic in fields such as data bases and data mining. Finding Super-Spreaders and heavy changes are critical problems in security \cite{security}. Finding persistent items on the other hand is relatively recent. Note that interest can be defined in other ways. For example, to find the destination IP addresses with a large number of source IP addresses is fundamental in DDoS detection. 
+%Another example is to find important items, namely to pick the items with high frequencies as well as high priority. 
+% Steve: The previous example is not clear at all. What does priority refer to?
+
+Finding interesting items is challenging, mainly because of the high speed of the data streams.
+%
+Therefore, it is often impossible to find interesting items without errors.
+%
+Fortunately, small and controllable errors are often acceptable in practice.
+%
+This is why sketches, a type of probabilistic data structure, have recently been used for such problems~\cite{asketch,opensketch,unbiasedsketch,coldfilter,gsketch,persistentsketch}.
+
+
+\vvv
+\presub
+\subsection{Prior Art and Their Limitations} \postsub
+\label{sec:intro:priorart}
+
+Existing sketches often focus on one specific type of interest. 
+%
+For different interests, existing solutions use different data structures.
+%
+\hl{There are typically four definitions of interest, corresponding to four tasks: finding frequent items, finding heavy changes, finding Super-Spreaders, and finding persistent items.} For each of the four tasks, existing algorithms can be divided into two types. 
+The first is called \texttt{record all}: recording all information of the stream. 
+The second records a part of information of the stream, recording only \textbf{\textit{hot items}} or relying on sampling. 
+In this paper, we call the items with high interest \textbf{\textit{hot items}} and the items with low interest \textbf{\textit{cold items}}.
+\hl{Here we only introduce the prior art in finding frequent items and the rest three are provided in Appendix {\ref{sec:relatedwork}}.}
+
+%\ppp{1) Finding Frequent Items:}
+\ppp{Finding Frequent Items:}
+Interest is defined as \textit{frequency}, \ie, the number of appearances of an item.
+%
+The task is to find items with large frequencies.
+%
+To find frequent items, two types of solutions exist. The first type, \texttt{record all}, records the frequencies of all items.
+%{\color{jj}For this task, \texttt{record all} algorithms record  the frequencies of all items.}
+Typical algorithms are made of a sketch (\eg, sketches of CM~\cite{cmsketch}, CU~\cite{cusketch}, and Count \cite{countsketch}) plus a min-heap, and ASketch~\cite{asketch}. Recording the frequencies of cold items is unnecessary. The second kind only records hot items: the information of items with large frequencies. Typical algorithms are SpaceSaving~\cite{spacesaving}, Unbiased SpaceSaving~\cite{unbiasedsketch}, Lossy Counting \cite{losscounting}, and Cold filter~\cite{coldfilter}.
+%The third kind is called \texttt{hybrid} in this paper, which adds a filter to filter cold items before recording the information of items with large frequencies. The typical algorithm is called .
+%
+SpaceSaving and the Unbiased SpaceSaving use a min-heap-like data structure to record hot items. 
+When the min-heap is full, the smallest frequency is incremented by one irrespective of the incoming item being cold or hot. However, in practice, there are many cold items that have a \textit{negative impact} on the recorded frequencies, leading to relatively poor accuracy.
+%
+Our algorithm belongs to the second kind, but manages to minimize this negative impact without using any additional data structure. 
+
+%\ppp{2) Finding Heavy Changes:}
+%Here, a data stream is equally divided into $n$ periods (also known as time windows or intervals). We define interest as \textit{change of frequency}, \ie, the difference of frequency of an item in two adjacent periods.
+%
+%Again, the first type of solution is to \texttt{record all}, including k-ary \cite{kary}, the reversible sketch \cite{revsketch}, and FlowRadar \cite{flowradar}. 
+%They build one data structure to record all items in each period, and then manage to decode and report heavy changes. 
+%
+%The second kind manages to record only hot items, and the typical algorithm being Cold filter \cite{coldfilter}.
+%Cold filter first uses a filter to filter cold items, and then focuses on hot items. We aim to achieve a higher accuracy than Cold filter without any additional data structure.
+
+
+%\ppp{3) Finding Super-Spreaders:}
+%Each item is a packet with a source IP address and a destination IP address. We define interest as \textit{connections}, \ie, the number of destination IP addresses for a given source IP address. The problem is to find source IP addresses with large number of connections.
+%
+%Again, two kinds of solutions exist. The first, \texttt{record all}, records the information of all packets. Typical algorithms are Two-dimension bitmap \cite{twodimensional} and OpenSketch \cite{opensketch}. 
+%The second kind, \texttt{record samples}, samples packets before recording the information of packets. Sampling achieves memory efficiency at the cost of poor accuracy.
+%The typical algorithms here are called one-level filtering \cite{superspreader} and two-level filtering \cite{superspreader}. We aim to record only Super-Spreaders without sampling, to achieve a higher accuracy. 
+
+%\ppp{4) Finding Persistent Items:}
+%Here, a data stream is equally divided into $n$ periods. 
+%
+%We define interest as \textit{persistency}, \ie, the number of periods in which the item appears.
+%
+%In each period of the stream, the persistency of an item is incremented only once or not changed. 
+%
+%The problem is to find items with high persistency.
+%
+%Again, two types of solutions exist. The first, \texttt{record all}, records the information of all packets. The typical algorithm is PIE \cite{persisitem}. The second kind, \texttt{record samples}, samples before recording the information of items. The typical algorithm is small-space \cite{smallspace}. 
+%
+%We aim to record only persistent items to achieve a higher accuracy. 
+
+%In contrast, we aim to design a generic framework, which can be used for finding any interesting items with high speed and high accuracy at the same time.
+
+
+ 
+\presub \uuu
+\subsection{Our Solution} 
+\postsub \uuu \uuu
+%
+In this paper, we propose a generic framework, named \aname, to find interesting items, such as frequent items, heavy changes, Super-Spreaders, and persistent items.
+%
+
+Now we use a simple example to explain our key idea of differentiating hot items from others. Consider the following problem: given a data stream, how to find the most frequent item with only one bucket?
+%
+The bucket has two fields: item ID and frequency.
+%
+The key operation lies in the following situation: the incoming item $e_1$ is different from \texttt{the original item} $e_0$ with frequency $f_0$ kept in the bucket. 
+%
+The most widely used algorithm, SpaceSaving \cite{spacesaving}, just replaces $e_0$ with $e_1$, and increments the frequency from $f_0$ to $f_0+1$.
+%
+In contrast, our technique is called \textit{\textbf{Probabilistic Replace then Increment (PRI)}}: replacing $e_0$ with the incoming item $e_1$ with a replacement probability $\mathcal{P}$.
+%
+If $e_1$ successfully replaces $e_0$, we increment $f_0$ by $\lfloor t_{fail}/f_0\rfloor $ and reset $t_{fail}$ to 0, where $t_{fail}$ is the number of replacement failures. Otherwise, we increment $t_{fail}$ by 1.
+%when the number of replacement failures is small, we keep $f_0$ unchanged; if $e_1$ replaces $e_0$ when the number of replacement failures is large, \yt{we increment $f_0$ by 2;} and in other cases, we increment $f_0$ by 1.
+After each unsuccessful replacement, the replacement probability $\mathcal{P}$ increases.
+%
+Further, to make replacement as correct as possible, \ie, given that we want only hot items to replace cold items, \textit{the value of $\mathcal{P}$ decreases as $f$ increases.}
+%
+More details about $\mathcal{P}$ are provided in Section \ref{sub:findinterest}.
+
+
+\ppp{Analysis:} 
+%lbq.. suppose
+SpaceSaving supposes the incoming item is always hotter than the original item in the bucket. At the end, the item kept in the bucket must be the last incoming one and the interest is the sum of the interests of all distinct items in the data stream. 
+The unbiased SpaceSaving \cite{unbiasedsketch} first increments the frequency and then tries replacement, achieving unbiased error at the cost of poor accuracy.
+%
+In contrast, we differentiate hot and cold items by using PRI. Compared with cold items, hot items have a higher probability of replacing the original item.
+%
+After each successful replacement, incrementing the frequency is reasonable.
+%
+%In this way, we divide the data stream into two parts: with high probability, hot items are maintained and cold items are discarded.
+%
+%In this way, with high probability, we keep hot items and discard cold items.
+
+
+
+
+
+%Given a specific definition of interest, \aname{} can find interesting items quickly and accurately.
+
+\ppp{Main Experimental Results:}
+We compare our \aname{} with the state-of-the-art algorithms in each of the aforementioned four tasks.
+In finding frequent items, \aname{} reduces the error $74\sim 3207$ times and improves the insertion speed $2.2\sim 7.7$ times. In finding heavy changes, \aname{} improves the precision $3.6\sim 6.2$ times when using only 1/20 of the memory size of other algorithms and improves the insertion speed $2.1\sim 3.0$ times. In finding Super-Spreaders, \aname{} reduces the error $18\sim 31$ times. In finding persistent items, \aname{} reduces the error $115\sim 50212$ times when using only 1/20 of the memory size of other algorithms and increases the insertion speed $1.4\sim 4$ times.
+% Suppose that there is one bucket with record of the ID and frequency of the item. For a incoming data stream, we want to store the most frequent item in the bucket. 
+% %
+% We keep the Id and frequency $f$ of the first incoming item in the bucket. 
+% %
+% When the next item comes, in Space-Saving, the original item is replaced by the incoming item and the frequency is added by one anyway.
+% %
+% In contrast, we replace the original item with the new item with a probability of $1/(f+1)$. If replacing successfully, the frequency is added by one. Otherwise, the frequency remains unchanged.
+% %
+% In Space-Saving, the item kept in the bucket must be the last incoming one in the data stream and the frequency is the number of items in the stream. In our algorithm, the larger frequency the item has, the higher probability the item will be kept in the bucket.  
+
+
+%\presub
+%\vvv\vvv
+%\subsection{Key Contribution} %\postsub
+
+\ppp{Key Contributions:}
+
+1) We propose a generic framework called InterestSketch, which can find interesting items with high accuracy and high speed using small memory.
+
+	2) To verify the generality of our framework, we apply the framework to four specific tasks, including finding frequent items, finding heavy changes, finding Super-Spreaders, and finding persistent items.
+
+3) We derive the error bounds and several theoretical properties of InterestSketch.
+% Steve: reasonable means absolutely nothing for a proof.
+
+	4) We conduct extensive experiments on three real datasets and one synthetic dataset. Our results show that InterestSketch significantly outperforms all existing algorithms in terms of both accuracy and speed.
+
+
+
+% \begin{itemize}
+% 	\item We propose a generic framework called InterestSketch, which can find interesting items with high accuracy and high speed using small memory.
+% 	\item To verify the generality of our framework, we apply the framework to four specific tasks, including finding frequent items, finding heavy changes, finding Super-Spreaders, and finding persistent items.
+% 	\item We derive the error bounds and several theoretical properties of InterestSketch.
+% % Steve: reasonable means absolutely nothing for a proof.
+% 	\item We conduct extensive experiments on three real datasets and one synthetic dataset. Our results show that InterestSketch significantly outperforms all existing algorithms in terms of both accuracy and speed.
+% \end{itemize}
+
+
+% \ppp{Roadmap:} Section \ref{sec:relatedwork} surveys the related work.
+% We present our algorithms in Section \ref{sec:basicAlgorithm}.
+% The algorithm is optimized in Section \ref{sec:optimization}. 
+% We apply the algorithm to four tasks in Section \ref{sec:application}. 
+% We derive proofs of our algorithms in Section \ref{sec:proof}.
+% The experimental results are showed in Section \ref{sec:experiments}.
+% The conclusion of this paper is in Section \ref{sec:conclusion}.
+
+
+
